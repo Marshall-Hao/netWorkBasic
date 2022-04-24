@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <label for="file">File:</label><br>
+   <input type="file" id="file" name="file"><br><br>
+    
+    <input onClick="submit()" type="submit" value="Submit">
+
+    <script>
+     let upload = {}
+     function submit() {
+         console.log('here',upload)
+        fetch('/submit64',{
+            method: 'POST',
+            body: JSON.stringify(upload),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+     }
+     document.getElementById('file').addEventListener('change',e=> {
+         const files = e.target.files
+        //  File(Blob)
+        // 30000
+        //  BUffer[1024] 缓冲区
+         for (let file of files) {
+             const fr = new FileReader()
+             fr.readAsDataURL(file)
+            //  * callback  
+             fr.onload=()=> {
+                 console.log(fr.result)
+                 upload.data = fr.result.substr(22) // * data:image/png;base64，减掉前面22个字符
+                 upload.name = file.name
+             }
+         }
+     })
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label for="file">File:</label><br>
+    <input type="file" id="file" name="file"><br><br>
+     
+     <input onClick="submit()" type="submit" value="Submit">
+     <script>
+        let upload = {}
+        function submit() {
+            console.log('here',upload)
+            const formData = new FormData()
+            // * https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/append
+            formData.append('name',upload.name)
+            formData.append('file',upload.data)
+           fetch('/submitbinary',{
+               method: 'POST',
+               body: formData,
+               headers: {
+                //  * 会自动加上boundary
+               }
+           })
+        }
+        document.getElementById('file').addEventListener('change',e=> {
+            const files = e.target.files
+           //  File(Blob)
+           // 30000
+           //  BUffer[1024] 缓冲区
+            for (let file of files) {
+                    upload.data = file  // * blob
+                    upload.name = file.name
+            }
+        })
+       </script>
+</body>
+</html>
